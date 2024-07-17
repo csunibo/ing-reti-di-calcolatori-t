@@ -1,0 +1,44 @@
+/*--------------------------------CLIENT---------------------------------*/
+//Stanze è la mia classe che implementa Serializable e che devo ricevere
+
+ObjectInputStream ois;
+//dopo aver creato la socket
+try{
+	ois = new ObjectInputStream(streamSocket.getInputStream());
+}
+(IOException e){
+	System.out.println("Problemi nella creazione dello stream di input su socket: ");
+	e.printStackTrace();
+	System.out.print("\n^D(Unix)/^Z(Win)+invio per uscire, oppure immetti nome file: ");
+	continue;
+}
+
+try {
+	stanze = (Stanza[]) ois.readObject();
+} catch (Exception e) {
+	System.out.println("Errore nel leggere le stanza in input: ");
+        e.printStackTrace();
+}
+
+
+/*--------------------------------SERVER-----------------------------------*/
+ObjectOutputStream oos = null;
+//dopo aver creato la socket
+
+// creazione stream di ouput su socket
+try{
+	oos = new ObjectOutputStream(clientSocket.getOutputStream());
+}
+catch(IOException e){
+	System.out.println("Problemi nella creazione dello stream di output su socket: ");
+	e.printStackTrace();
+	System.out.print("\n^D(Unix)/^Z(Win)+invio per uscire, oppure immetti nome file: ");
+    System.exit(2);
+}
+
+try {
+    oos.writeObject(stanze);
+} catch (IOException e) {
+    System.out.println("Errore! Impossibile scrivere lo stato delle stanze sullo stream di output");
+    System.exit(2);
+}

@@ -1,0 +1,76 @@
+
+------------------------USA LE STAMPE DI DEBUG-------------------------------
+
+----------------------METTI-MATRICOLA-SU-OGNI-FILE----------------------------
+
+---------------------------Generare stub e skeleton---------------------------------
+rmic -vcompat RMI_Server
+------------------------------------------------------------------------------------
+
+----------------------------------Compilare RPC-------------------------------------
+gcc -I /usr/include/tirpc server.c operazioni_svc.c operazioni_xdr.c -o server -ltirpc
+
+------------------------Controllare che la porta sia valida-------------------------
+port<1024 || port>65535 => ERROR
+In java:
+	if(registryPort<1024 || registryPort>6553){
+		System.out.println("Sintassi: ClientFile RegistryHost [1024<=registryPort<=6553]");
+		System.exit(1);
+	}
+-------------------------------------------------------------------------------
+
+--------------------Chiudere input o ouput in C sulla socket------------------------
+//CHIUDERE LATO LETTURA O SCRITTURA SE IL FIGLIO NON LO USA
+
+/*chiudo l'input */
+/*if (shutdown(conn_sd, SHUT_RD)<0){
+	if (errno==EINTR) continue;
+	else {
+		perror("shutdown(read)"); 
+		exit(8);
+	}
+}*/
+
+/* chiudo l'output */
+/*if (shutdown(conn_sd, SHUT_WR)<0){
+	if (errno==EINTR) continue;
+	else {
+		perror("shutdown(read)"); 
+		exit(8);
+	}
+}*/
+-------------------------------------------------------------------------------
+
+--------------Controllare la dimensione della stringa della gets()--------------
+//utlizzarla quando si ha un limite di grandezza della stringa
+int                okTerminator;
+char               terminator = '\0';
+okTerminator = 0;
+for(int i=0; i<LINE_LENGTH; i++){
+	if(directoryName[i] == terminator){
+		okTerminator = 1;
+		break;
+	}
+}
+if(!okTerminator){
+	printf("La stringa inserita eccede il massimo dei caratteri consentiti\n\n");
+	//printf("Inserire nome del direttorio, EOF per terminare: ");
+	continue;
+}
+-------------------------------------------------------------------------------
+
+-----------------------------SEPARATORI----------------------------------------
+String separatori = " \t\r.,;:'\"()-`*&^#@!$\\|[]{}?/";
+//in C inserire anche '\n', in java di solito non ha senso visto che leggo una riga alla volta
+
+-------------------------------ACCORTEZZE--------------------------------------
+- No StringTokenizer
+- Controllare che il valore di ritorno in RPC e RMI non sia NULL
+- Non usare String per un solo carattere; 
+- Se chiede una lista di nomi riotornare un array di Stringhe
+- Non usare lo Scanner ma BufferedReader: 
+	BufferedReader br = null;
+        br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+- Controllare il valore di ritorno di tutto, ad esempio strlen() se si sta controllando che il nome di un file finisca con un dato susffisso (e.g. ".txt"), o la scanf()
+
+
